@@ -35,9 +35,9 @@ async function canSwap(address) {
   return ! await Signature.exists({ account: address, status: "Pending" })
 }
 
-function setStatusComplete(address, amount) {
+function setStatusComplete(address, amount, nonce) {
   const update = { $set: { status: 'Complete' } }
-  Signature.updateOne({ account: address, tokenAmount: amount }, update, function (err) {
+  Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err) {
     if (err) console.log(err)
   })
 }

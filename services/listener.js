@@ -14,14 +14,16 @@ const originBridge = new ethers.Contract(process.env.ORIGIN_NETWORK_ADDRESS, jso
 
 function tokenLockedListener() {
   originBridge.on('TokensLocked', async (account, amount) => {
+    console.log("TokensLocked")
     const nonce = await destinationBridge.getCurrentNonce(account)
     signatureService.signOrder(account, amount.toNumber(), nonce.toNumber() + 1)
   })
 }
 
 function tokenUnLockedListener() {
-  destinationBridge.on('TokensUnlocked', function (account, amount) {
-    signatureService.setStatusComplete(account, amount)
+  destinationBridge.on('TokensUnlocked', function (account, amount, nonce) {
+    console.log("TokensUnlocked")
+    signatureService.setStatusComplete(account, amount, nonce)
   })
 }
 
