@@ -4,7 +4,7 @@ require('dotenv').config()
 const ethers = require('ethers')
 const Signature = require('../model/signature')
 
-async function signOrder (address, amount, nonce) {
+async function signOrder(address, amount, nonce) {
   const message = ethers.utils.solidityKeccak256(
     ['uint256', 'uint256', 'address'],
     [amount, nonce, address])
@@ -19,15 +19,23 @@ async function signOrder (address, amount, nonce) {
   console.log('New signature has been created', signature)
 }
 
-async function getAllTansaction (address) {
+async function getAllTansaction(address) {
   return await Signature.find({ account: address }, 'account tokenAmount nonce status').exec()
 }
 
-async function getSignature (address, nonce) {
-  return await Signature.findOne({ account: address, nonce: nonce }, 'signature').exec()
+async function getClaim(address, res) {
+  const result = await Signature.findOne({ account: address, status: 'Pending' }, 'signature tokenAmount nonce').exec()
+  if (!result)
+    res.sendStatus(404)
+  else
+    return result;
 }
 
-function setStatusComplete (address, amount) {
+async function canSwap(address) {
+  return ! await Signature.exists({ account: address, status: "Pending" })
+}
+
+function setStatusComplete(address, amount) {
   const update = { $set: { status: 'Complete' } }
   Signature.updateOne({ account: address, tokenAmount: amount }, update, function (err) {
     if (err) console.log(err)
@@ -38,5 +46,6 @@ module.exports = {
   signOrder: signOrder,
   getAllTansaction: getAllTansaction,
   setStatusComplete: setStatusComplete,
-  getSignature: getSignature
+  getClaim: getClaim,
+  canSwap: canSwap
 }

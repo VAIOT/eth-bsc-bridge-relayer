@@ -26,4 +26,8 @@ const Signature = new Schema({
   }
 })
 
-module.exports = mongoose.model('Signature', Signature)
+if (process.env.MODE == "eth_to_bsc") {
+  module.exports = mongoose.model('Signature', Signature, "eth_to_bsc_bridge")
+} else if (process.env.MODE == "bsc_to_eth") {
+  module.exports = mongoose.model('Signature', Signature, "bsc_to_eth_bridge")
+}

@@ -1,14 +1,19 @@
 const signatureService = require('../services/signature-service')
 
-function getAllTansaction (address) {
+function getAllTansaction(address) {
   return signatureService.getAllTansaction(address)
 }
 
-function getSignature (address, nonce) {
-  return signatureService.getSignature(address, nonce)
+function getClaim(address, res) {
+  return signatureService.getClaim(address, res)
+}
+
+function canSwap(address) {
+  return signatureService.canSwap(address)
 }
 
 module.exports = {
   getAllTansaction: getAllTansaction,
-  getSignature: getSignature
+  getClaim: getClaim,
+  canSwap: canSwap
 }
