@@ -19,22 +19,6 @@ async function signOrder(address, amount, nonce) {
   console.log('New signature has been created', signature)
 }
 
-async function getAllTansaction(address) {
-  return await Signature.find({ account: address }, 'account tokenAmount nonce status').exec()
-}
-
-async function getClaim(address, res) {
-  const result = await Signature.findOne({ account: address, status: 'Pending' }, 'signature tokenAmount nonce').exec()
-  if (!result)
-    res.sendStatus(404)
-  else
-    return result;
-}
-
-async function canSwap(address) {
-  return ! await Signature.exists({ account: address, status: "Pending" })
-}
-
 function setStatusComplete(address, amount, nonce) {
   const update = { $set: { status: 'Complete' } }
   Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err) {
@@ -44,8 +28,5 @@ function setStatusComplete(address, amount, nonce) {
 
 module.exports = {
   signOrder: signOrder,
-  getAllTansaction: getAllTansaction,
-  setStatusComplete: setStatusComplete,
-  getClaim: getClaim,
-  canSwap: canSwap
+  setStatusComplete: setStatusComplete
 }
