@@ -8,6 +8,4 @@ RUN npm i --production && npm prune --production
 
 COPY . .
 
-EXPOSE 8075
-
 CMD node index.js
