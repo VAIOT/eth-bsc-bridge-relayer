@@ -1,0 +1,27 @@
+name: Docker Image 
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile -t eth-bsc-bridge-relayer:latest
+
+    - name: Azure login
+      uses: Azure/docker-login@v1
+      with:
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: veriori.azurecr.io
+
+    - name: Push image 
+      run: docker push eth-bsc-bridge-relayer:latest
