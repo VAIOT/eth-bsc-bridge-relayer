@@ -5,7 +5,10 @@ on:
     branches: [ master, actions ]
   pull_request:
     branches: [ master, actions ]
-  
+
+env:
+  IMAGE_NAME: eth-bsc-bridge-relayer:latest 
+    
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +17,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile -t eth-bsc-bridge-relayer:latest
+      run: docker build . --file Dockerfile -t $IMAGE_NAME
 
     - name: Azure login
       uses: Azure/docker-login@v1
@@ -24,4 +27,4 @@ jobs:
         login-server: veriori.azurecr.io
 
     - name: Push image 
-      run: docker push eth-bsc-bridge-relayer:latest
+      run: docker push $IMAGE_NAME
