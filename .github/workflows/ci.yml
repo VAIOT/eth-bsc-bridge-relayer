@@ -2,9 +2,9 @@ name: Docker Image
 
 on:
   push:
-    branches: [ $default-branch ]
+    branches: [ master, actions ]
   pull_request:
-    branches: [ $default-branch ]
+    branches: [ master, actions ]
   
 jobs:
   build:
