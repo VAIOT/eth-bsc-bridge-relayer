@@ -2,13 +2,15 @@ name: Docker Image
 
 on:
   push:
-    branches: [ master, actions ]
+    branches: [ master, actions, dockerfile ]
   pull_request:
-    branches: [ master, actions ]
+    branches: [ master, actions, dockerfile ]
 
 env:
-  IMAGE_NAME: veriori.azurecr.io/vaiot/eth-bsc-bridge-relayer:latest 
-    
+  IMAGE_TAG: latest
+  ACR_SERVER: veriori.azurecr.io 
+  REPOSITORY: %ACR_SERVER/${{ github.repository_owner }}/${{ github.repository }}:$IMAGE_TAG
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,14 +19,22 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile -t $IMAGE_NAME
+      run: |
+        REPOSITORY=$(echo $REPOSITORY | tr '[A-Z]' '[a-z]')
+        docker build . --file Dockerfile -t $REPOSITORY
+  
+  login_push:
+    runs-on: ubuntu-latest
 
+    steps:
     - name: Azure login
       uses: Azure/docker-login@v1
       with:
         username: ${{ secrets.ACR_USERNAME }}
         password: ${{ secrets.ACR_PASSWORD }}
-        login-server: veriori.azurecr.io
+        login-server: $ACR_SERVER
 
     - name: Push image 
-      run: docker push $IMAGE_NAME
+      run: |
+        REPOSITORY=$(echo $REPOSITORY | tr '[A-Z]' '[a-z]')      
+        docker push $REPOSITORY
