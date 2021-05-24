@@ -16,7 +16,7 @@ function tokenLockedListener() {
   originBridge.on('TokensLocked', async (account, amount) => {
     console.log("TokensLocked")
     const nonce = await destinationBridge.getCurrentNonce(account)
-    signatureService.signOrder(account, amount.toNumber(), nonce.toNumber() + 1)
+    signatureService.signOrder(account, amount, nonce.toNumber() + 1)
   })
 }
 
