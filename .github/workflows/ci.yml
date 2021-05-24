@@ -19,10 +19,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile -t $IMAGE_NAME
   
-  login_push:
-    runs-on: ubuntu-latest
-
-    steps:
     - name: Azure login
       uses: Azure/docker-login@v1
       with:
