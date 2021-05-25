@@ -4,13 +4,9 @@ on:
   push:
     branches: 
     - master 
-    - actions 
-    - dockerfile
   pull_request:
     branches: 
     - master
-    - actions
-    - dockerfile
 
 env:
   IMAGE_NAME: veriori.azurecr.io/vaiot/eth-bsc-bridge-relayer
