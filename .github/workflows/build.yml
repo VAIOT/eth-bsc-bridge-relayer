@@ -17,5 +17,5 @@ jobs:
       - uses: docker://sonarsource/sonar-scanner-cli:latest
         env:
           GITHUB_TOKEN: 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
-          SONAR_TOKEN: 970d3852dc9a74d65d2ad52e2dfa6afc39532585
+          SONAR_TOKEN: cec4b89fca373331bf0d52546d9e1a6835ed7fbe
           SONAR_HOST_URL: https://sonarqube.veriori.com
