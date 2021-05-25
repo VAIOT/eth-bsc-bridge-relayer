@@ -16,6 +16,6 @@ jobs:
           fetch-depth: 0
       - uses: docker://sonarsource/sonar-scanner-cli:latest
         env:
-          GITHUB_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          GITHUB_TOKEN: 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
+          SONAR_TOKEN: 970d3852dc9a74d65d2ad52e2dfa6afc39532585
+          SONAR_HOST_URL: https://sonarqube.veriori.com
