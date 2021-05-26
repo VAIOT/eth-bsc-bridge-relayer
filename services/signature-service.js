@@ -24,6 +24,7 @@ function setStatusComplete(address, amount, nonce) {
   Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err) {
     if (err) console.log(err)
   })
+  console.log("One document has been updated")
 }
 
 module.exports = {
