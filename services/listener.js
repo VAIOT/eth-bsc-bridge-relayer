@@ -13,10 +13,9 @@ const originProvider = new ethers.providers.JsonRpcProvider(process.env.ORIGIN_N
 const originBridge = new ethers.Contract(process.env.ORIGIN_NETWORK_ADDRESS, jsonBridge.abi, originProvider)
 
 function tokenLockedListener() {
-  originBridge.on('TokensLocked', async (account, amount) => {
+  originBridge.on('TokensLocked', async (account, amount, nonce) => {
     console.log("TokensLocked")
-    const nonce = await destinationBridge.getCurrentNonce(account)
-    signatureService.signOrder(account, amount, nonce.toNumber() + 1)
+    signatureService.signOrder(account, amount, nonce.toNumber())
   })
 }
 
