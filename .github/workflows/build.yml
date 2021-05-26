@@ -18,4 +18,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
-          SONAR_HOST_URL: https://sonarqube.veriori.xyz
+          SONAR_HOST_URL: https://sonarqube.veriori.com
