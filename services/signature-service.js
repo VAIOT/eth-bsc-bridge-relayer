@@ -13,21 +13,43 @@ async function signOrder(address, amount, nonce) {
   const messageBytes = ethers.utils.arrayify(message)
 
   const signature = await wallet.signMessage(messageBytes)
+  return signature
+}
+
+async function createSignature(address, amount, nonce) {
+  const signature = await signOrder(address, amount, nonce)
 
   const sig = new Signature({ status: 'Pending', nonce: nonce, account: address, signature: signature, tokenAmount: amount })
   sig.save()
   console.log('New signature has been created', signature)
 }
 
-function setStatusComplete(address, amount, nonce) {
+function setStatusComplete(address, amount, nonce, ifCron) {
   const update = { $set: { status: 'Complete' } }
-  Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err) {
-    if (err) console.log(err)
+  Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err, docs) {
+    if (err)
+      console.log(err)
+    else if (docs.nModified == "1") {
+      if (ifCron)
+        console.log("One document has been updated by synchronization task: account- ", address, " amount- ", amount, " nonce- ", nonce)
+      else
+        console.log("One document has been updated: account- ", address, " amount- ", amount, " nonce- ", nonce)
+    }
   })
-  console.log("One document has been updated")
+}
+
+async function checkIfSignatureExist(address, amount, nonce) {
+  const signature = await signOrder(address, amount, nonce)
+
+  if (! await Signature.exists({ nonce: nonce, account: address, signature: signature, tokenAmount: amount })) {
+    const sig = new Signature({ status: 'Pending', nonce: nonce, account: address, signature: signature, tokenAmount: amount })
+    sig.save()
+    console.log('New signature has been created by synchronization task', signature)
+  }
 }
 
 module.exports = {
-  signOrder: signOrder,
-  setStatusComplete: setStatusComplete
+  setStatusComplete: setStatusComplete,
+  checkIfSignatureExist: checkIfSignatureExist,
+  createSignature: createSignature
 }

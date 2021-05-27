@@ -3,6 +3,7 @@ require('dotenv').config()
 const ethers = require('ethers')
 const fs = require('fs')
 const signatureService = require('../services/signature-service')
+const BlockNumber = require('../model/blockNumber')
 
 const jsonBridge = JSON.parse(fs.readFileSync('./contracts/UpgradeableBridgeContract.json'))
 
@@ -14,19 +15,67 @@ const originBridge = new ethers.Contract(process.env.ORIGIN_NETWORK_ADDRESS, jso
 
 function tokenLockedListener() {
   originBridge.on('TokensLocked', async (account, amount, nonce) => {
-    console.log("TokensLocked: account- ", account, " amount- ", amount.toNumber(), " nonce- ", nonce.toNumber())
-    signatureService.signOrder(account, amount, nonce.toNumber())
+    console.log("TokensLocked: account- ", account, " amount- ", amount, " nonce- ", nonce)
+    signatureService.createSignature(account, amount, nonce.toNumber())
   })
 }
 
 function tokenUnLockedListener() {
   destinationBridge.on('TokensUnlocked', function (account, amount, nonce) {
-    console.log("TokensUnlocked: account- ", account, " amount- ", amount.toNumber(), " nonce- ", nonce.toNumber())
-    signatureService.setStatusComplete(account, amount, nonce)
+    console.log("TokensUnlocked: account- ", account, " amount- ", amount, " nonce- ", nonce)
+    signatureService.setStatusComplete(account, amount, nonce, false)
   })
+}
+
+async function cronTaskForOrgin() {
+  var latest = await BlockNumber.findOne({ bridgeMode: process.env.MODE }, 'destinationBlock').exec()
+  if (latest == null) {
+    await new BlockNumber({ bridgeMode: process.env.MODE, originBlock: 0, destinationBlock: 0 }).save()
+    latest = 0
+  }
+  const currentBlockNumber = await originProvider.getBlockNumber()
+
+  const update = { $set: { originBlock: currentBlockNumber } }
+  await BlockNumber.updateOne({ bridgeMode: process.env.MODE }, update, function (err) {
+    if (err) console.log(err)
+  })
+
+  const eventFilter = originBridge.filters.TokensLocked()
+  const events = await originBridge.queryFilter(eventFilter, latest.latest, currentBlockNumber)
+
+  if (events.length != 0) {
+    events.forEach(function (entry) {
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount.toNumber(), entry.args.nonce.toNumber())
+    });
+  }
+}
+
+async function cronTaskForDestination() {
+  var latest = await BlockNumber.findOne({ bridgeMode: process.env.MODE }, 'destinationBlock').exec()
+  if (latest == null) {
+    await new BlockNumber({ bridgeMode: process.env.MODE, originBlock: 0, destinationBlock: 0 }).save()
+    latest = 0
+  }
+  const currentBlockNumber = await destinationProvider.getBlockNumber()
+
+  const update = { $set: { destinationBlock: currentBlockNumber } }
+  await BlockNumber.updateOne({ bridgeMode: process.env.MODE }, update, function (err) {
+    if (err) console.log(err)
+  })
+
+  const eventFilter = destinationBridge.filters.TokensUnlocked()
+  const events = await destinationBridge.queryFilter(eventFilter, 9183590, currentBlockNumber)
+
+  if (events.length != 0) {
+    events.forEach(function (entry) {
+      signatureService.setStatusComplete(entry.args.account, entry.args.amount.toNumber(), entry.args.nonce.toNumber(), true)
+    });
+  }
 }
 
 module.exports = {
   tokenLockedListener: tokenLockedListener,
-  tokenUnLockedListener: tokenUnLockedListener
+  tokenUnLockedListener: tokenUnLockedListener,
+  cronTaskForOrgin: cronTaskForOrgin,
+  cronTaskForDestination: cronTaskForDestination
 }
