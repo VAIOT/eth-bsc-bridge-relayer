@@ -28,7 +28,7 @@ function tokenUnLockedListener() {
 }
 
 async function cronTaskForOrgin() {
-  var latest = await BlockNumber.findOne({ bridgeMode: process.env.MODE }, 'destinationBlock').exec()
+  var latest = await BlockNumber.findOne({ bridgeMode: process.env.MODE }, 'originBlock').exec()
   if (latest == null) {
     await new BlockNumber({ bridgeMode: process.env.MODE, originBlock: 0, destinationBlock: 0 }).save()
     latest = 0
@@ -41,11 +41,11 @@ async function cronTaskForOrgin() {
   })
 
   const eventFilter = originBridge.filters.TokensLocked()
-  const events = await originBridge.queryFilter(eventFilter, latest.latest, currentBlockNumber)
+  const events = await originBridge.queryFilter(eventFilter, latest.originBlock, currentBlockNumber)
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount.toNumber(), entry.args.nonce.toNumber())
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce)
     });
   }
 }
@@ -64,11 +64,11 @@ async function cronTaskForDestination() {
   })
 
   const eventFilter = destinationBridge.filters.TokensUnlocked()
-  const events = await destinationBridge.queryFilter(eventFilter, 9183590, currentBlockNumber)
+  const events = await destinationBridge.queryFilter(eventFilter, latest.destinationBlock, currentBlockNumber)
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.setStatusComplete(entry.args.account, entry.args.amount.toNumber(), entry.args.nonce.toNumber(), true)
+      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, true)
     });
   }
 }
