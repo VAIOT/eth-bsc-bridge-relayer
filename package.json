@@ -12,6 +12,7 @@
     "dotenv": "^8.2.0",
     "ethers": "^5.0.32",
     "express": "^4.17.1",
+    "kube-probe": "^1.0.2",
     "mongoose": "^5.12.2",
     "standard": "^16.0.3"
   }
