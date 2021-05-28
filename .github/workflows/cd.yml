@@ -4,7 +4,6 @@ on:
   push:
     branches: 
     - master
-    - actions 
 
 env:
   IMAGE_NAME: veriori.azurecr.io/vaiot/eth-bsc-bridge-relayer
