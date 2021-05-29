@@ -1,0 +1,39 @@
+name: Build image and push to registry, development environment 
+
+on:
+  push:
+    branches: 
+    - dev
+
+env:
+  IMAGE_NAME: veriori.azurecr.io/vaiot/eth-bsc-bridge-relayer
+  MAJOR_VERSION: 1.0.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set version
+      id: version
+      run: echo "::set-output name=version::$MAJOR_VERSION$(date +%s)d"
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{steps.version.outputs.version}}
+  
+    - name: Azure acr login
+      uses: Azure/docker-login@v1
+      with:
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        login-server: veriori.azurecr.io
+
+    - name: Push image 
+      run: docker push -a $IMAGE_NAME
+
+    - name: Tag commit with version number
+      run: |
+        git tag v${{steps.version.outputs.version}}
+        git push --tags

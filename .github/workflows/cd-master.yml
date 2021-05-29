@@ -1,4 +1,4 @@
-name: Build image and push to registry 
+name: Build image and push to registry, production enviroment
 
 on:
   push:
@@ -18,10 +18,10 @@ jobs:
 
     - name: Set version
       id: version
-      run: echo "::set-output name=version::$MAJOR_VERSION$(date +%s)"
+      run: echo "::set-output name=version::$MAJOR_VERSION$(date +%s)r"
 
     - name: Build the Docker image
-      run: docker build . --file Dockerfile -t $IMAGE_NAME:latest -t $IMAGE_NAME:v${{steps.version.outputs.version}}
+      run: docker build . --file Dockerfile -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{steps.version.outputs.version}}
   
     - name: Azure acr login
       uses: Azure/docker-login@v1
