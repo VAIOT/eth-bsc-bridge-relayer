@@ -33,7 +33,7 @@ async function cronTaskForOrgin() {
     await new BlockNumber({ bridgeMode: process.env.MODE, originBlock: 0, destinationBlock: 0 }).save()
     latest = 0
   }
-  const currentBlockNumber = await originProvider.getBlockNumber()
+  const currentBlockNumber = await originProvider.getBlockNumber() - 1
 
   const update = { $set: { originBlock: currentBlockNumber } }
   await BlockNumber.updateOne({ bridgeMode: process.env.MODE }, update, function (err) {
@@ -56,7 +56,7 @@ async function cronTaskForDestination() {
     await new BlockNumber({ bridgeMode: process.env.MODE, originBlock: 0, destinationBlock: 0 }).save()
     latest = 0
   }
-  const currentBlockNumber = await destinationProvider.getBlockNumber()
+  const currentBlockNumber = await destinationProvider.getBlockNumber() - 1
 
   const update = { $set: { destinationBlock: currentBlockNumber } }
   await BlockNumber.updateOne({ bridgeMode: process.env.MODE }, update, function (err) {
