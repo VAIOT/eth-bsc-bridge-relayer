@@ -15,6 +15,11 @@ cron.schedule('* * * * *', function () {
   listener.cronTaskForDestination()
 });
 
+cron.schedule('*/15 * * * *', function () {
+  listener.cronTaskForDestinationEvery15min()
+  listener.cronTaskForOrginEvery15min()
+});
+
 module.exports = app
 
 if ((process.env.MODE != "eth_to_bsc") && (process.env.MODE != "bsc_to_eth")) {

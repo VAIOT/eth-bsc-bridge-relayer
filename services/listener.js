@@ -45,7 +45,7 @@ async function cronTaskForOrgin() {
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce)
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, true)
     });
   }
 }
@@ -73,9 +73,34 @@ async function cronTaskForDestination() {
   }
 }
 
+
+async function cronTaskForOrginEvery15min() {
+  const eventFilter = originBridge.filters.TokensLocked()
+  const events = await originBridge.queryFilter(eventFilter, Number(process.env.BLOCK_NUMBER), "latest")
+
+  if (events.length != 0) {
+    events.forEach(function (entry) {
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, null)
+    });
+  }
+}
+
+async function cronTaskForDestinationEvery15min() {
+  const eventFilter = destinationBridge.filters.TokensUnlocked()
+  const events = await destinationBridge.queryFilter(eventFilter, Number(process.env.BLOCK_NUMBER), "latest")
+
+  if (events.length != 0) {
+    events.forEach(function (entry) {
+      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, null)
+    });
+  }
+}
+
 module.exports = {
   tokenLockedListener: tokenLockedListener,
   tokenUnLockedListener: tokenUnLockedListener,
   cronTaskForOrgin: cronTaskForOrgin,
-  cronTaskForDestination: cronTaskForDestination
+  cronTaskForDestination: cronTaskForDestination,
+  cronTaskForOrginEvery15min: cronTaskForOrginEvery15min,
+  cronTaskForDestinationEvery15min: cronTaskForDestinationEvery15min,
 }
