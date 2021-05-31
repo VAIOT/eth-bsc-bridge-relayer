@@ -24,31 +24,31 @@ async function createSignature(address, amount, nonce) {
   console.log('New signature has been created', signature)
 }
 
-function setStatusComplete(address, amount, nonce, ifCron) {
+function setStatusComplete(address, amount, nonce, taskType) {
   const update = { $set: { status: 'Complete' } }
   Signature.updateOne({ account: address, tokenAmount: amount, nonce: nonce }, update, function (err, docs) {
     if (err)
       console.log(err)
     else if (docs.nModified == "1") {
-      if (ifCron)
-        console.log("One document has been updated by synchronization task: account- ", address, " amount- ", amount, " nonce- ", nonce)
-      else if (!ifCron)
+      if (taskType == 1)
         console.log("One document has been updated: account- ", address, " amount- ", amount, " nonce- ", nonce)
-      else
+      else if (taskType == 2)
+        console.log("One document has been updated by synchronization task: account- ", address, " amount- ", amount, " nonce- ", nonce)
+      else if (taskType == 3)
         console.log("One document has been updated by synchronization task running every 15 min: account- ", address, " amount- ", amount, " nonce- ", nonce)
     }
   })
 }
 
-async function checkIfSignatureExist(address, amount, nonce, ifCron) {
+async function checkIfSignatureExist(address, amount, nonce, taskType) {
   const signature = await signOrder(address, amount, nonce)
 
   if (! await Signature.exists({ nonce: nonce, account: address, signature: signature, tokenAmount: amount })) {
     const sig = new Signature({ status: 'Pending', nonce: nonce, account: address, signature: signature, tokenAmount: amount })
     sig.save()
-    if (ifCron)
+    if (taskType == 1)
       console.log('New signature has been created by synchronization task', signature)
-    else
+    else if (taskType == 2)
       console.log('New signature has been created by synchronization task running every 15 min', signature)
   }
 }

@@ -23,7 +23,7 @@ function tokenLockedListener() {
 function tokenUnLockedListener() {
   destinationBridge.on('TokensUnlocked', function (account, amount, nonce) {
     console.log("TokensUnlocked: account- ", account, " amount- ", amount, " nonce- ", nonce)
-    signatureService.setStatusComplete(account, amount, nonce, false)
+    signatureService.setStatusComplete(account, amount, nonce, 1)
   })
 }
 
@@ -45,7 +45,7 @@ async function cronTaskForOrgin() {
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, true)
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, 1)
     });
   }
 }
@@ -68,7 +68,7 @@ async function cronTaskForDestination() {
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, true)
+      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, 2)
     });
   }
 }
@@ -80,7 +80,7 @@ async function cronTaskForOrginEvery15min() {
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, null)
+      signatureService.checkIfSignatureExist(entry.args.account, entry.args.amount, entry.args.nonce, 2)
     });
   }
 }
@@ -91,7 +91,7 @@ async function cronTaskForDestinationEvery15min() {
 
   if (events.length != 0) {
     events.forEach(function (entry) {
-      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, null)
+      signatureService.setStatusComplete(entry.args.account, entry.args.amount, entry.args.nonce, 3)
     });
   }
 }
