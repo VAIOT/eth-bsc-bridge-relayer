@@ -9,12 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^8.2.0",
-    "ethers": "^5.0.32",
-    "express": "^4.17.1",
-    "kube-probe": "^1.0.2",
-    "mongoose": "^5.12.2",
-    "node-cron": "^3.0.0",
-    "standard": "^16.0.3"
+    "dotenv": "10.0.0",
+    "ethers": "5.3.1",
+    "express": "4.17.1",
+    "kube-probe": "1.0.2",
+    "mongoose": "5.12.13",
+    "node-cron": "3.0.0",
+    "standard": "16.0.3"
   }
 }
