@@ -20,6 +20,10 @@ jobs:
       id: version
       run: echo "::set-output name=version::$MAJOR_VERSION$(date +%s)d"
 
+    - name: Set image name
+      id: imagename
+      run: echo "::set-output name=imagename::$IMAGE_NAME"
+
     - name: Build the Docker image
       run: docker build . --file Dockerfile -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{steps.version.outputs.version}}
   
@@ -37,3 +41,14 @@ jobs:
       run: |
         git tag v${{steps.version.outputs.version}}
         git push --tags
+
+    - name: Add image to Snyk
+      uses: snyk/actions/docker@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        SNYK_REGISTRY_USERNAME: ${{ secrets.ACR_USERNAME }}
+        SNYK_REGISTRY_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+      with:
+        command: monitor
+        args: --file=Dockerfile
+        image: ${{steps.imagename.outputs.imagename}}:${{steps.version.outputs.version}}
