@@ -73,10 +73,10 @@ async function cronTaskForDestination() {
   }
 }
 
-
 async function cronTaskForOrginEvery15min() {
   const eventFilter = originBridge.filters.TokensLocked()
-  const events = await originBridge.queryFilter(eventFilter, Number(process.env.BLOCK_NUMBER), "latest")
+  const blockNumber = await originProvider.getBlockNumber() - 4000
+  const events = await originBridge.queryFilter(eventFilter, blockNumber, "latest")
 
   if (events.length != 0) {
     events.forEach(function (entry) {
@@ -87,7 +87,8 @@ async function cronTaskForOrginEvery15min() {
 
 async function cronTaskForDestinationEvery15min() {
   const eventFilter = destinationBridge.filters.TokensUnlocked()
-  const events = await destinationBridge.queryFilter(eventFilter, Number(process.env.BLOCK_NUMBER), "latest")
+  const blockNumber = await destinationProvider.getBlockNumber() - 4000
+  const events = await destinationBridge.queryFilter(eventFilter, blockNumber, "latest")
 
   if (events.length != 0) {
     events.forEach(function (entry) {
