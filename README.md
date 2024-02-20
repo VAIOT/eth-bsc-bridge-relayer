@@ -1,6 +1,7 @@
 <div align="center">
-    <img src="assets/vaiotLogo.svg" alt="VAIOT Logo" width="400"/>
+    <img src="assets/vaiLogo.svg" alt="VAIOT Logo" width="400"/>
 </div>
+</br>
 
 # ETH-BSC Bridge Relayer
 
@@ -29,7 +30,7 @@ contracts and a backend relayer service to listen for lock and unlock events, ma
 Clone the repository
 
 ```bash
-git clone https://github.com/yourgithub/eth-bsc-bridge-relayer.git
+git clone https://github.com/VAIOT/eth-bsc-bridge-relayer.git
 cd eth-bsc-bridge-relayer
 ```
 
@@ -62,31 +63,21 @@ npm start
 
 ```
 
-    Run cron jobs
+Run cron jobs
 
-    The application automatically schedules cron jobs for syncing operations. Ensure your system allows cron job execution.
+The application automatically schedules cron jobs for syncing operations. Ensure your system allows cron job execution.
 
-Usage
+## Usage
 
-    Listening for Events: The application listens for TokensLocked and TokensUnlocked events from the configured smart contracts on the Ethereum and BSC networks, respectively.
-    Processing Transactions: Transactions are automatically processed and synced based on the events captured by the listeners.
+<ul>
+   <li> Listening for Events: The application listens for TokensLocked and TokensUnlocked events from the configured smart contracts on the Ethereum and BSC networks, respectively.</li>
+    <li>Processing Transactions: Transactions are automatically processed and synced based on the events captured by the listeners.</li>
+</ul>
 
-Smart Contracts
+## Smart Contracts
 
 This project includes the UpgradeableBridgeContract, VAITokenBSC, and VaiTokenETH smart contracts. Deploy these contracts on the respective networks before using the bridge.
 
-    Deploying Smart Contracts: Follow the smart contract documentation for deployment instructions.
+## Contributing
 
-Contributing
-
-Contributions are welcome! Please read our Contributing Guide for more information on how to get started.
-Security
-
-This project is still under development, and its security has not been fully audited. Use at your own risk. For security concerns, please report them privately to [your-email@example.com].
-License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-```
-
-```
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
