@@ -1,56 +1,66 @@
-ETH-BSC Bridge Relayer
+<div align="center">
+    <img src="assets/vaiotLogo.svg" alt="VAIOT Logo" width="400"/>
+</div>
 
-The ETH-BSC Bridge Relayer facilitates secure and efficient token transfers between the Ethereum (ETH) and Binance Smart Chain (BSC) networks. It leverages smart contracts and a backend relayer service to listen for lock and unlock events, manage transactions, and ensure seamless asset movement across chains.
-Features
+# ETH-BSC Bridge Relayer
 
-    Token Locking and Unlocking: Listen for and handle token lock and unlock events across ETH and BSC.
-    Signature Verification: Generate and verify signatures to secure transactions.
-    Automated Synchronization: Use cron jobs to regularly sync bridge operations and ensure consistency.
-    Upgradeable Smart Contracts: Deploy upgradeable contracts for flexibility and future improvements.
+The ETH-BSC Bridge Relayer facilitates secure and efficient token transfers between the Ethereum (ETH) and Binance Smart Chain (BSC) networks. It leverages smart
+contracts and a backend relayer service to listen for lock and unlock events, manage transactions, and ensure seamless asset movement across chains.
 
-Getting Started
-Prerequisites
+## Features
 
-    Node.js (version 12.x or higher)
-    MongoDB
-    An Ethereum and a BSC wallet with testnet or mainnet tokens for testing
+<ul>
+    <li>Token Locking and Unlocking: Listen for and handle token lock and unlock events across ETH and BSC.</li>
+    <li>Signature Verification: Generate and verify signatures to secure transactions.</li>
+    <li>Automated Synchronization: Use cron jobs to regularly sync bridge operations and ensure consistency.</li>
+    <li>Upgradeable Smart Contracts: Deploy upgradeable contracts for flexibility and future improvements.</li>
+</ul>
 
-Installation
+## Prerequisites
 
-    Clone the repository
+<ul>
+    <li>Node.js (version 12.x or higher)</li>
+    <li>MongoDB</li>
+    <li>An Ethereum and a BSC wallet with testnet or mainnet tokens for testing</li>
+</ul>
 
-    bash
+## Installation
 
+Clone the repository
+
+```bash
 git clone https://github.com/yourgithub/eth-bsc-bridge-relayer.git
 cd eth-bsc-bridge-relayer
+```
 
 Install dependencies
 
-bash
-
+```bash
 npm install
+```
 
 Set up environment variables
 
 Copy the .env.example file to a new file named .env, and fill in your details:
 
-plaintext
+```bash
+PORT=<port_of_backend>
+MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net<dbname>
+ORIGIN_NETWORK_URL=https://<ethereum_network>
+DESTINATION_NETWORK_URL=https://<bsc_network>
+ORIGIN_NETWORK_ADDRESS=<address_of_ethereum_bridge_contract>
+DESTINATION_NETWORK_ADDRESS=<address_of_bsc_bridge_contract>
+PRIVATE_KEY=<your_private_key_for_signing>
+MODE=<eth_to_bsc or bsc_to_eth>
+```
 
-    MONGODB_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/<dbname>
-    ORIGIN_NETWORK_URL=https://<ethereum_network>
-    DESTINATION_NETWORK_URL=https://<bsc_network>
-    ORIGIN_NETWORK_ADDRESS=<address_of_ethereum_bridge_contract>
-    DESTINATION_NETWORK_ADDRESS=<address_of_bsc_bridge_contract>
-    PRIVATE_KEY=<your_private_key_for_signing>
-    MODE=eth_to_bsc
+Start the application
 
-Running the Project
+```bash
 
-    Start the application
+npm start
 
-    bash
-
-    npm start
+```
 
     Run cron jobs
 
@@ -76,3 +86,7 @@ This project is still under development, and its security has not been fully aud
 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+```
+
+```
