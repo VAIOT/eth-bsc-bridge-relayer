@@ -78,6 +78,8 @@ The application automatically schedules cron jobs for syncing operations. Ensure
 
 This project includes the UpgradeableBridgeContract, VAITokenBSC, and VaiTokenETH smart contracts. Deploy these contracts on the respective networks before using the bridge.
 
+You can find them [here](https://github.com/VAIOT/eth-bsc-bridge-relayer.git).
+
 ## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated.
